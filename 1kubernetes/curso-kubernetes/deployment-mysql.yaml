@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mysql-docker
+  name: mysql-docker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-docker
+  template:
+    metadata:
+      labels:
+        app: mysql-docker
+    spec:
+      containers:
+      - name: mysql
+        image: mysql
+        ports:
+        - containerPort: 3306
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: sasa
+          - name: MYSQL_DATABASE
+            value: msvc_usuarios
+        volumeMounts:
+          - mountPath: /var/lib/mysql
+            name: data-mysql
+      volumes:
+        - name: data-mysql
+          persistentVolumeClaim:
+            claimName: mysql-pvc

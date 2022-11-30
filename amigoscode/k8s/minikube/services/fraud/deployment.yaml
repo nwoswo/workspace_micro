@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fraud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fraud
+  template:
+    metadata:
+      labels:
+        app: fraud
+    spec:
+      containers:
+      - name: fraud
+        image: nwoswo/amigoscode-fraud:2.0-SNAPSHOT
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: "800m"
+        ports:
+        - containerPort: 8080
+        envFrom:
+            - configMapRef:
+                name: postgres-config

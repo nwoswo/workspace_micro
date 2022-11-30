@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      containers:
+      - name: notification
+        image: nwoswo/amigoscode-notification:2.0-SNAPSHOT
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: "800m"
+        ports:
+        - containerPort: 8082
+        envFrom:
+            - configMapRef:
+                name: postgres-config

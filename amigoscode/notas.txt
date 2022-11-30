@@ -1,0 +1,14 @@
+RestTemplate
+maven
+MQ
+Eureka-Server
+docker-compose
+mysql
+Api-Cloud-Gateway
+maven pugling jar
+MapStruct
+Zipking
+
+
+
+java -jar eureka-server/target/eureka-server

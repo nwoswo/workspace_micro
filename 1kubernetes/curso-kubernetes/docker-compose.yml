@@ -1,0 +1,79 @@
+version: "3.9"
+services:
+#MYSQL
+  mysql-docker:
+    container_name: mysql-docker
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: sasa
+      MYSQL_DATABASE: msvc_usuarios
+    volumes:
+      - data-mysql:/var/lib/mysql
+#POSTGRESQL
+  postgres-docker:
+    container_name: postgres-docker
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: sasa
+      POSTGRES_DB: msvc_cursos
+    volumes:
+      - data-postgres:/var/lib/postgresql/data
+#PGADMIN
+  pgadmin4:
+    container_name: pgadmin4
+    image: dpage/pgadmin4
+    ports:
+      - "80:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: nwoswo@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: sasa
+    volumes:
+      - data-pgadmin4:/var/lib/pgadmin
+    restart: always
+#USUARIOS
+  msvc-usuarios:
+    container_name: msvc-usuarios
+    build:
+      context: ./
+      dockerfile: ./msvc-usuarios/Dockerfile
+    image: msvc-usuarios
+    ports:
+      - "8081:8081"
+    env_file: ./msvc-usuarios/.env
+    depends_on:
+      - mysql-docker
+    restart: always
+#CURSOS
+  msvc-cursos:
+    build:
+      context: ./
+      dockerfile: ./msvc-cursos/Dockerfile
+    container_name: msvc-cursos
+    image: msvc-cursos
+    ports:
+      - "8082:8082"
+    env_file:
+      - ./msvc-cursos/.env
+    depends_on:
+      - postgres-docker
+      - msvc-usuarios
+    restart: always
+
+
+##############################
+volumes:
+  data-mysql:
+    name: data-mysql
+  data-postgres:
+    name: data-postgres
+  data-pgadmin4:
+    name: data-pgadmin4
+networks:
+  curso-kubernetes:
+    name: curso-kubernetes
+

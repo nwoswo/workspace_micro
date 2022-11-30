@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: msvc-cursos
+  name: msvc-cursos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: msvc-cursos
+  template:
+    metadata:
+      labels:
+        app: msvc-cursos
+    spec:
+      containers:
+      - name: msvc-cursos
+        image: nwoswo/msvc-cursos:latest
+        ports:
+        - containerPort: 8082
+        env:
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: msvc-cursos
+                key: username
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: msvc-cursos
+                key: password
+          - name: MY_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: MY_POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+#          - name: USUARIOS_URL
+#            value: msvc-usuarios:8081
